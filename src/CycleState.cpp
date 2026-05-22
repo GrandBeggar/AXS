@@ -28,25 +28,26 @@ void CycleState::Refresh(void) {
 	Data.CycleSt.Set(statusInt);
 
 	//	Sensor-blockage fault: trips if the sensor stays Active longer than
-	//	(CyOverlapMod + OVERLAP_MARGIN_PCT). Independent of cycle state, so
-	//	it measures actual sensor blockage rather than time-in-FEEDING.
+	//	(CyOverlapMod + OVERLAP_MARGIN_PCT). Level-driven off Active rather
+	//	than OSR/OSF edges, so the timer state is reasserted every scan and
+	//	cannot get stuck out of sync with the sensor.
 	const int OVERLAP_MARGIN_PCT = 25;
-	if (IO.Sensor.Status.OSR) {
-		CycleOverlapDurationTarget = ms + (Data.CyOverlapMod.Local * (100 + OVERLAP_MARGIN_PCT) / 100);
-	}
-	if (IO.Sensor.Status.OSF) {
-		CycleOverlapDurationTarget = 0;
-		Data.CyOverlapAct.Local = 0;
-		// Sensor blockage is resolved -- release the latched fault.
-		States.SensorAlwaysOn.status = StateHolder::Fault::OFF;
-	}
-	if (IO.Sensor.Status.Active && CycleOverlapDurationTarget > 0) {
+	if (IO.Sensor.Status.Active) {
+		// Arm on first scan of blockage (target == 0 means not yet armed).
+		if (CycleOverlapDurationTarget == 0) {
+			CycleOverlapDurationTarget = ms + (Data.CyOverlapMod.Local * (100 + OVERLAP_MARGIN_PCT) / 100);
+		}
 		Data.CyOverlapAct.Local = CycleOverlapDurationTarget - ms;
 		if (status != CYCLE_OFF && CycleOverlapDurationTarget <= ms) {
 			States.SensorAlwaysOn.status = StateHolder::Fault::ON;
 			CycleOverlapDurationTarget = 0;
 			Data.CyOverlapAct.Local = 0;
 		}
+	} else {
+		// Sensor clear -- reset timer, display, and latched fault unconditionally.
+		CycleOverlapDurationTarget = 0;
+		Data.CyOverlapAct.Local = 0;
+		States.SensorAlwaysOn.status = StateHolder::Fault::OFF;
 	}
 
 	if (status == CYCLE_OFF) {
