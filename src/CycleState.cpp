@@ -37,6 +37,8 @@ void CycleState::Refresh(void) {
 	if (IO.Sensor.Status.OSF) {
 		CycleOverlapDurationTarget = 0;
 		Data.CyOverlapAct.Local = 0;
+		// Sensor blockage is resolved -- release the latched fault.
+		States.SensorAlwaysOn.status = StateHolder::Fault::OFF;
 	}
 	if (IO.Sensor.Status.Active && CycleOverlapDurationTarget > 0) {
 		Data.CyOverlapAct.Local = CycleOverlapDurationTarget - ms;
