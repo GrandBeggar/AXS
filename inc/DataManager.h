@@ -3,7 +3,7 @@
  *
  * Created: 9/21/2022 9:15:53 PM
  *  Author: kevin
- */ 
+ */
 
 
 #ifndef __REGISTERS_H__
@@ -48,21 +48,21 @@ public:
 	void Sync(int _priority);
 	void SendUpdate();
 
-	protected: 
+	protected:
 
 		DataMap( _GetSet __GetSet, int _Address, int _DataType);
-	
+
 };	//	_DATA CLASS
 
 class DataHolder {
 	friend class DataMap;
-	
+
 	public:
-	
+
 	DataHolder();
 	std::map<const int, DataMap *> Arr;
-	
-	//	HMI	|	MAIN PAGE 
+
+	//	HMI	|	MAIN PAGE
 	DataMap SpeedTarget;		DataMap SpeedActual;		DataMap SpeedRate;
 	DataMap OffsetTarget;		DataMap OffsetIFActual;		DataMap OffsetOFActual;
 	DataMap RunQtyTarget;		DataMap RunQtyActual;		DataMap RunQtyState;
@@ -94,14 +94,15 @@ class DataHolder {
 	DataMap CyStopDlyTar;	DataMap CyStopDlyAct;	DataMap CyStopDlyMod;
 	DataMap CyOverlapTar;	DataMap CyOverlapAct;	DataMap CyOverlapMod;
 	DataMap CyStartTar;		DataMap CyStartAct;
-	DataMap CySucPauseTar;	DataMap CySucPauseAct;	DataMap CySucPauseMod;
-	DataMap CyPauseTar;		DataMap CyPauseAct;		
-	DataMap CyResumeTar;	DataMap CyResumeAct;
-	DataMap CyPauseDlyTar;	DataMap CyPauseDlyAct;	DataMap CyPauseDlyMod;
-	
+	DataMap FeedPauseTarget;		DataMap FeedPauseActual;	DataMap FeedPauseModified;
+	DataMap DownstreamPauseTarget;	DataMap DownstreamPauseActual;
+	DataMap DownstreamResumeTarget;	DataMap DownstreamResumeActual;
+	DataMap FeedPauseDelayTarget;	DataMap FeedPauseDelayActual;	DataMap FeedPauseDelayModified;
+
 	//	HMI	|	SPEED SETTINGS
 	DataMap MaxRPM;
 	DataMap PwrStrtDlyTar;	DataMap PwrStrtDlyAct;
+	DataMap MachineHanding;
 
 	//	HMI |	EXTERNAL DEVICE SETTINGS
 	DataMap PrintSignalTar;		DataMap PrintSignalAct;	DataMap PrintSignalMod;
@@ -111,6 +112,6 @@ class DataHolder {
 	//	HMI		MANUAL IO
 	DataMap ForceDI6;	DataMap ForceDI7;	DataMap ForceDI8;
 	DataMap ForceA9;	DataMap ForceA10;	DataMap ForceA11;	DataMap ForceA12;
-	
+
 };	//	DataHolder Class
 #endif /* REGISTERS_H_ */

@@ -27,3 +27,24 @@ _ReSharper*/
 [Tt]est[Rr]esult*
 *.vssscc
 $tf*/
+
+# IDE / editor caches
+.vs/
+.vscode/
+.idea/
+*.atsuo
+
+# Local tooling
+.claude/
+
+# Embedded build artifacts
+*.o
+*.d
+*.elf
+*.hex
+*.bin
+*.eep
+*.map
+*.lss
+*.lst
+*.srec

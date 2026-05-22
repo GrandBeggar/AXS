@@ -46,7 +46,7 @@ void DataMap::Sync() {
 //	Update Status and send to HMI ( triggered from both Set and Get )
 void DataMap::Sync(int _priority) {
 
-	if (Priority)	
+	if (Priority)
 		_priority = Priority;
 
 	//	If not in sync, check if it is already updating
@@ -57,7 +57,7 @@ void DataMap::Sync(int _priority) {
 			if (_priority != 1)
 				_priority = 2;
 		}
-	} 
+	}
 	//	If in sync, send handshake on low priority
 	else {
 		Synced = true;
@@ -68,10 +68,10 @@ void DataMap::Sync(int _priority) {
 }
 
 DataHolder::DataHolder() {
-	//	GetSet	Address	DataType[1-3]	Frequency	
+	//	GetSet	Address	DataType[1-3]	Frequency
 	//	HMI	|	MAIN PAGE	//////////////////////////////////////////////////////////////////////////
 	SpeedTarget		= DataMap(DataMap::GETTER,	20,	1);	Arr[20] = &SpeedTarget;
-	SpeedActual		= DataMap(DataMap::SETTER,	21,	2);	Arr[21] = &SpeedActual;	
+	SpeedActual		= DataMap(DataMap::SETTER,	21,	2);	Arr[21] = &SpeedActual;
 	SpeedRate		= DataMap(DataMap::SETTER,	22,	2);	Arr[22] = &SpeedRate;
 	OffsetTarget	= DataMap(DataMap::GETTER,	24,	1);	Arr[24] = &OffsetTarget;
 	OffsetIFActual	= DataMap(DataMap::SETTER,	25,	2);	Arr[25] = &OffsetIFActual;
@@ -84,9 +84,9 @@ DataHolder::DataHolder() {
 	IFSpeedActual   = DataMap(DataMap::SETTER,	32,	1);	Arr[32] = &IFSpeedActual;
 
 	//	HMI	|	INFO PAGE	//////////////////////////////////////////////////////////////////////////
-	SuccessTotal	= DataMap(DataMap::COUNTER,	50,	3);	Arr[50] = &SuccessTotal;	
-	MissedTotal		= DataMap(DataMap::COUNTER,	52,	3);	Arr[52] = &MissedTotal;	
-	SuccessCurrent	= DataMap(DataMap::COUNTER,	54,	3);	Arr[54] = &SuccessCurrent;	
+	SuccessTotal	= DataMap(DataMap::COUNTER,	50,	3);	Arr[50] = &SuccessTotal;
+	MissedTotal		= DataMap(DataMap::COUNTER,	52,	3);	Arr[52] = &MissedTotal;
+	SuccessCurrent	= DataMap(DataMap::COUNTER,	54,	3);	Arr[54] = &SuccessCurrent;
 	MissedCurrent	= DataMap(DataMap::COUNTER,	56,	3);	Arr[56] = &MissedCurrent;
 	PouchRunTime	= DataMap(DataMap::COUNTER,	60,	2);	Arr[60] = &PouchRunTime;
 	PouchRTAvg		= DataMap(DataMap::COUNTER,	61,	2);	Arr[61] = &PouchRTAvg;
@@ -130,22 +130,24 @@ DataHolder::DataHolder() {
 	CyOverlapMod	= DataMap(DataMap::SETTER,	122,2);	Arr[122] = &CyOverlapMod;
 	CyStartTar		= DataMap(DataMap::GETTER,	123,2);	Arr[123] = &CyStartTar;
 	CyStartAct		= DataMap(DataMap::SETTER,	124,2);	Arr[124] = &CyStartAct;
-	CySucPauseTar	= DataMap(DataMap::GETTER,	125,2);	Arr[125] = &CySucPauseTar;
-	CySucPauseAct	= DataMap(DataMap::SETTER,	126,2);	Arr[126] = &CySucPauseAct;
-	CySucPauseMod	= DataMap(DataMap::SETTER,	127,2); Arr[127] = &CySucPauseMod;
-	CyPauseTar		= DataMap(DataMap::GETTER,	128,2);	Arr[128] = &CyPauseTar;
-	CyPauseAct		= DataMap(DataMap::SETTER,	129,2);	Arr[129] = &CyPauseAct;
-	CyResumeTar		= DataMap(DataMap::GETTER,	130,2);	Arr[130] = &CyResumeTar;
-	CyResumeAct		= DataMap(DataMap::SETTER,	131,2);	Arr[131] = &CyResumeAct;
-	CySucPauseTar	= DataMap(DataMap::GETTER,	132,2);	Arr[132] = &CyPauseDlyTar;
-	CySucPauseAct	= DataMap(DataMap::SETTER,	133,2);	Arr[133] = &CyPauseDlyAct;
-	CySucPauseMod	= DataMap(DataMap::SETTER,	134,2); Arr[134] = &CyPauseDlyMod;
+	FeedPauseTarget			= DataMap(DataMap::GETTER,	125,2);	Arr[125] = &FeedPauseTarget;
+	FeedPauseActual			= DataMap(DataMap::SETTER,	126,2);	Arr[126] = &FeedPauseActual;
+	FeedPauseModified		= DataMap(DataMap::SETTER,	127,2); Arr[127] = &FeedPauseModified;
+	DownstreamPauseTarget	= DataMap(DataMap::GETTER,	128,2);	Arr[128] = &DownstreamPauseTarget;
+	DownstreamPauseActual	= DataMap(DataMap::SETTER,	129,2);	Arr[129] = &DownstreamPauseActual;
+	DownstreamResumeTarget	= DataMap(DataMap::GETTER,	130,2);	Arr[130] = &DownstreamResumeTarget;
+	DownstreamResumeActual	= DataMap(DataMap::SETTER,	131,2);	Arr[131] = &DownstreamResumeActual;
+	FeedPauseDelayTarget	= DataMap(DataMap::GETTER,	132,2);	Arr[132] = &FeedPauseDelayTarget;
+	FeedPauseDelayActual	= DataMap(DataMap::SETTER,	133,2);	Arr[133] = &FeedPauseDelayActual;
+	FeedPauseDelayModified	= DataMap(DataMap::SETTER,	134,2); Arr[134] = &FeedPauseDelayModified;
 
 
 	//	Speed Settings			//////////////////////////////////////////////////////////////////////////
 	MaxRPM			= DataMap(DataMap::GETTER,	140,2);	Arr[140] = &MaxRPM;
 	PwrStrtDlyTar	= DataMap(DataMap::GETTER,	141,2);	Arr[141] = &PwrStrtDlyTar;
 	PwrStrtDlyAct	= DataMap(DataMap::SETTER,	142,2);	Arr[142] = &PwrStrtDlyAct;
+	MachineHanding	= DataMap(DataMap::GETTER,	143,1); Arr[143] = &MachineHanding;
+
 	//	EXTERNAL DEVICE SETTINGS//////////////////////////////////////////////////////////////////////////
 	PrintSignalTar	= DataMap(DataMap::GETTER,	160,2);	Arr[160] = &PrintSignalTar;
 	PrintSignalAct	= DataMap(DataMap::SETTER,	161,2);	Arr[161] = &PrintSignalAct;
@@ -155,7 +157,7 @@ DataHolder::DataHolder() {
 
 	Beacon1Active	= DataMap(DataMap::GETTER,	167,1);	Arr[167] = &Beacon1Active;
 	Beacon2Active	= DataMap(DataMap::GETTER,	168,1);	Arr[168] = &Beacon2Active;
-	
+
 	//	Manual IO
 	ForceDI6		= DataMap(DataMap::GETTER,	200,1); Arr[200] = &ForceDI6;
 	ForceDI7		= DataMap(DataMap::GETTER,	201,1); Arr[201] = &ForceDI7;
@@ -166,5 +168,5 @@ DataHolder::DataHolder() {
 	ForceA12		= DataMap(DataMap::GETTER,	206,1); Arr[206] = &ForceA12;
 	ForceDI6.Priority = 1;	ForceDI7.Priority = 1;	ForceDI8.Priority = 1;
 	ForceA9.Priority = 1;	ForceA10.Priority = 1;	ForceA11.Priority = 1;	ForceA12.Priority = 1;
-	
+
 }
