@@ -27,6 +27,26 @@ void CycleState::Refresh(void) {
 
 	Data.CycleSt.Set(statusInt);
 
+	//	Sensor-blockage fault: trips if the sensor stays Active longer than
+	//	(CyOverlapMod + OVERLAP_MARGIN_PCT). Independent of cycle state, so
+	//	it measures actual sensor blockage rather than time-in-FEEDING.
+	const int OVERLAP_MARGIN_PCT = 25;
+	if (IO.Sensor.Status.OSR) {
+		CycleOverlapDurationTarget = ms + (Data.CyOverlapMod.Local * (100 + OVERLAP_MARGIN_PCT) / 100);
+	}
+	if (IO.Sensor.Status.OSF) {
+		CycleOverlapDurationTarget = 0;
+		Data.CyOverlapAct.Local = 0;
+	}
+	if (IO.Sensor.Status.Active && CycleOverlapDurationTarget > 0) {
+		Data.CyOverlapAct.Local = CycleOverlapDurationTarget - ms;
+		if (status != CYCLE_OFF && CycleOverlapDurationTarget <= ms) {
+			States.SensorAlwaysOn.status = StateHolder::Fault::ON;
+			CycleOverlapDurationTarget = 0;
+			Data.CyOverlapAct.Local = 0;
+		}
+	}
+
 	if (status == CYCLE_OFF) {
 
 		// initiate cycle try timer
@@ -64,7 +84,6 @@ void CycleState::Refresh(void) {
 
 		if (CyclePauseDelay && InfeedPauseDelayTarget <= ms) {
 			CyclePauseDelay = false;
-			CycleOverlapDurationTarget = ms + Data.CyOverlapMod.Local;
 			LastPouchStart = ms;
 			CycleSucPauseTarget = ms + Data.FeedPauseModified.Local;
 			status = CYCLE_FEEDING;
@@ -113,14 +132,6 @@ void CycleState::Refresh(void) {
 		//	Transition only after pause completes AND a pouch has been counted
 		if (!CyclePause && PouchLengthCounted) {
 			status = CYCLE_SUCCESS;
-		}
-
-
-		Data.CyOverlapAct.Local = CycleOverlapDurationTarget - ms;
-		if (CycleOverlapDurationTarget <= ms)
-		{
-			Data.CyOverlapAct.Local = 0;
-			States.SensorAlwaysOn.status = StateHolder::Fault::ON;
 		}
 	}
 
