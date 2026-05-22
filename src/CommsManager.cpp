@@ -98,13 +98,11 @@ void Comms::SendMessages() {
 			funcType = 1;
 
 		if (it->second->DataType == 1)
-			sprintf(messageBuffer, "@1%01i%05i%03i!", funcType, it->second->Address, it->second->Local);
+			sprintf(messageBuffer, "@1%01i%05i%03li!", funcType, it->second->Address, it->second->Local);
 		else if (it->second->DataType == 2)
-			sprintf(messageBuffer, "@2%01i%05i%05i!", funcType, it->second->Address, it->second->Local);
+			sprintf(messageBuffer, "@2%01i%05i%05li!", funcType, it->second->Address, it->second->Local);
 		else if (it->second->DataType == 3)
-			sprintf(messageBuffer, "@3%01i%05i%10i!", funcType, it->second->Address, it->second->Local);
-
-		char newMessage[19];
+			sprintf(messageBuffer, "@3%01i%05i%10li!", funcType, it->second->Address, it->second->Local);
 
 		it->second->Sent = it->second->Local;
 
